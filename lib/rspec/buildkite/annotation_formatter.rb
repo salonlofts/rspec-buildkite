@@ -16,7 +16,13 @@ module RSpec::Buildkite
 
     def initialize(output)
       # We don't actually use this, but keep a reference anyway
-      @output = output
+      # @output = output
+      @output = output || StringIO.new
+      @example_count = @pending_count = @failure_count = 0
+      @examples = []
+      @failed_examples = []
+      @pending_examples = []
+      @example_group = nil
 
       # Only setup if we're actually running on Buildkite
       if ENV["BUILDKITE"]
