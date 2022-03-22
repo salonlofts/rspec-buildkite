@@ -63,20 +63,38 @@ module RSpec::Buildkite
       job_id = ENV["BUILDKITE_JOB_ID"].to_s
       job_url = "#{build_url}##{job_id}"
 
+      exception = notification.exception
+      message = exception.message
+      formatted_backtrace = format_backtrace(exception.backtrace, notification)
+      exception_message = "#{message}\n#{formatted_backtrace.join("\n")}"
+
       %{<details>\n} <<
       %{<summary>#{notification.description.encode(:xml => :text)}</summary>\n} <<
-      %{<pre class="term">#{Recolorizer.recolorize(notification.colorized_message_lines.join("\n").encode(:xml => :text))}</pre>\n} <<
+      %{<pre class="term">#{exception_message.encode(:xml => :text)}</pre>\n} <<
       format_rerun(notification) <<
       %{<p>in <a href=#{job_url.encode(:xml => :attr)}>Job ##{job_id.encode(:xml => :text)}</a></p>\n} <<
       %{</details>} <<
       %{\n\n\n}
+
+      # %{<details>\n} <<
+      # %{<summary>#{notification.description.encode(:xml => :text)}</summary>\n} <<
+      # %{<pre class="term">#{Recolorizer.recolorize(notification.colorized_message_lines.join("\n").encode(:xml => :text))}</pre>\n} <<
+      # format_rerun(notification) <<
+      # %{<p>in <a href=#{job_url.encode(:xml => :attr)}>Job ##{job_id.encode(:xml => :text)}</a></p>\n} <<
+      # %{</details>} <<
+      # %{\n\n\n}
     end
 
     def format_rerun(notification)
       %{<pre class="term">} <<
-      %{<span class="term-fg31">rspec #{notification.example.location_rerun_argument.encode(:xml => :text)}</span>} <<
-      %{ <span class="term-fg36"># #{notification.example.full_description.encode(:xml => :text)}</span>} <<
+      %{<span class="term-fg31">rspec #{RSpec::Core::Metadata::relative_path(notification.location).encode(:xml => :text)}</span>} <<
+      %{ <span class="term-fg36"># #{notification.full_description.encode(:xml => :text)}</span>} <<
       %{</pre>\n}
+
+      # %{<pre class="term">} <<
+      # %{<span class="term-fg31">rspec #{notification.example.location_rerun_argument.encode(:xml => :text)}</span>} <<
+      # %{ <span class="term-fg36"># #{notification.example.full_description.encode(:xml => :text)}</span>} <<
+      # %{</pre>\n}
     end
   end
 end
