@@ -11,8 +11,8 @@ module RSpec::Buildkite
   #
   # Uses a background Thread so we don't block the build.
   #
-  class AnnotationFormatter
-    RSpec::Core::Formatters.register self, :example_failed
+  class AnnotationFormatter < RSpec::Core::Formatters::BaseFormatter
+    # RSpec::Core::Formatters.register self, :example_failed
 
     def initialize(output)
       # We don't actually use this, but keep a reference anyway
