@@ -73,6 +73,7 @@ module RSpec::Buildkite
       %{<pre class="term">#{exception_message.encode(:xml => :text)}</pre>\n} <<
       format_rerun(notification) <<
       %{<p>in <a href=#{job_url.encode(:xml => :attr)}>Job ##{job_id.encode(:xml => :text)}</a></p>\n} <<
+      format_artifacts(notification) <<
       %{</details>} <<
       %{\n\n\n}
 
@@ -83,6 +84,19 @@ module RSpec::Buildkite
       # %{<p>in <a href=#{job_url.encode(:xml => :attr)}>Job ##{job_id.encode(:xml => :text)}</a></p>\n} <<
       # %{</details>} <<
       # %{\n\n\n}
+    end
+
+    def format_artifacts(notification)
+      return "" unless notification.metadata[:screenshot]
+
+      screenshot = notification.metadata[:screenshot]
+      image_relative_path = screenshot[:image].sub(/\A#{Rails.root}\/?/, '')
+      html_relative_path = screenshot[:html].sub(/\A#{Rails.root}\/?/, '')
+      image_path = "artifact://#{image_relative_path}"
+      html_path = "artifact://#{html_relative_path}"
+
+      %{<p><a href=#{html_path&.encode(:xml => :attr)}>HTML</a></p>\n} <<
+      %{<img src=\"#{image_path&.encode(:xml => :text)}\">\n}
     end
 
     def format_rerun(notification)
