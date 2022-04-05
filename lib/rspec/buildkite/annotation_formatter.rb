@@ -95,14 +95,14 @@ module RSpec::Buildkite
       image_path = "artifact://#{image_relative_path}"
       html_path = "artifact://#{html_relative_path}"
 
-      %{<p><a href=#{html_path&.encode(:xml => :attr)}>HTML</a></p>\n} <<
-      %{<img src=\"#{image_path&.encode(:xml => :text)}\">\n}
+      %{<p><a href=#{html_path.encode(:xml => :attr)} target="_blank">Screenshot HTML</a></p>\n} <<
+      %{<img src=\"#{image_path.encode(:xml => :attr)}\">\n}
     end
 
     def format_rerun(notification)
       %{<pre class="term">} <<
-      %{<span class="term-fg31">rspec #{RSpec::Core::Metadata::relative_path(notification.location).encode(:xml => :text)}</span>} <<
-      %{ <span class="term-fg36"># #{notification.full_description.encode(:xml => :text)}</span>} <<
+      %{<p class="term-fg31">rspec #{RSpec::Core::Metadata::relative_path(notification.location).encode(:xml => :text)}</p>} <<
+      %{ <p class="term-fg36"># #{notification.full_description.encode(:xml => :text)}</p>} <<
       %{</pre>\n}
 
       # %{<pre class="term">} <<

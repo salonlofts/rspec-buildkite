@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rspec-buildkite (0.1.9)
+    rspec-buildkite (0.1.10)
       rspec-core (>= 2.0)
 
 GEM
