@@ -69,7 +69,7 @@ module RSpec::Buildkite
       exception_message = "#{message}\n#{formatted_backtrace.join("\n")}"
 
       %{<details>\n} <<
-      %{<summary>#{notification.description.encode(:xml => :text)}</summary>\n} <<
+      %{<summary>:rspec:#{notification.description.encode(:xml => :text)}</summary>\n} <<
       %{<pre class="term">#{exception_message.encode(:xml => :text)}</pre>\n} <<
       format_rerun(notification) <<
       %{<p>in <a href=#{job_url.encode(:xml => :attr)}>Job ##{job_id.encode(:xml => :text)}</a></p>\n} <<
